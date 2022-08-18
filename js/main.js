@@ -1,5 +1,16 @@
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
+
+// we need this to load the font
+const myFont = new FontFace('Silkscreen', 'url(fonts/Silkscreen/Silkscreen-Regular.ttf)');
+myFont.load().then(function (font) {
+
+    // with canvas, if this is ommited won't work
+    document.fonts.add(font);
+    // get canvas context
+    initScreen();
+});
+
 const scoreDisplay = document.getElementById('score');
 
 class SnakePart {
@@ -40,7 +51,7 @@ let gameOver = false;
 function initScreen() {
     drawScore();
     ctx.globalCompositeOperation = 'source-over';
-    ctx.font = '20px Roboto Mono';
+    ctx.font = '20px Silkscreen';
     ctx.fillStyle = '#fff';
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -218,7 +229,3 @@ function resetGame() {
     score = 0;
     gameOver = false;
 }
-
-setTimeout(() => {
-    initScreen();
-}, 2000);

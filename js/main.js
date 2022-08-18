@@ -50,10 +50,10 @@ function initScreen() {
 function drawGame() {
     changeSnakePosition();
     gameOver = isGameOver();
-    console.log("gameOver", gameOver);
     if (gameOver) {
         gameOverScreen();
     } else {
+        gameStarted = true;
         clearScreen();
         checkAppleCollision();
         drawApple();
@@ -144,7 +144,6 @@ function keyDown(event) {
     }
 
     if (event.keyCode == 13) {
-        console.log("gameStarted", gameStarted)
         if (!gameStarted) {
             resetGame();
             drawGame();
@@ -182,7 +181,6 @@ function isGameOver() {
     return isTouching;
 }
 
-let blinking = true;
 function gameOverScreen() {
     gameStarted = false;
     if (gameOver) {
@@ -194,18 +192,12 @@ function gameOverScreen() {
         ctx.fillText(`Game Over!`, (canvas.width / 2), (canvas.height / 2.1));
         ctx.font = '20px Roboto Mono';
         ctx.fillText(`Your score is: ${score}`, (canvas.width - (canvas.width / 2)), (canvas.height / 1.7));
-        if (blinking) {
-            ctx.globalCompositeOperation = 'source-over';
-            ctx.fillStyle = '#fff';
-            ctx.font = '20px Roboto Mono';
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText(`PRESS ENTER TO PLAY AGAIN`, (canvas.width - (canvas.width / 2)), (canvas.height / 1.2), 400);
-        } else {
-            ctx.globalCompositeOperation = 'destination-over';
-            ctx.clearRect(1 * tileCount, 15 * tileCount, canvas.width - (2 * tileCount), 50);
-        }
-        blinking = blinking !== true;
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.fillStyle = '#fff';
+        ctx.font = '20px Roboto Mono';
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(`PRESS ENTER TO PLAY AGAIN`, (canvas.width - (canvas.width / 2)), (canvas.height / 1.2), 400);
         setTimeout(() => gameOverScreen(), 500);
     }
 }
@@ -216,17 +208,17 @@ function resetGame() {
     headX = 10;
     headY = 10;
 
-    appleX = 5;
-    appleY = 5;
+    moveApple();
 
     xVelocity = 0;
     yVelocity = 0;
 
-    snakeParts.splice(0,snakeParts.length);
+    snakeParts.splice(0, snakeParts.length);
     tailLength = 2;
     score = 0;
     gameOver = false;
-
 }
 
-initScreen();
+setTimeout(() => {
+    initScreen();
+}, 2000);

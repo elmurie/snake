@@ -28,17 +28,30 @@ let tailLength = 2;
 
 let score = 0;
 
-
 const soundGameOver = new Audio('Game_Over.mp3');
 const soundScore = new Audio('Point.mp3');
 
+let gameStarted = false;
+let gameOver = false;
+
 
 // game loop
+
+function initScreen() {
+    drawScore();
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.font = '20px Roboto Mono';
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(`PRESS ENTER TO PLAY!`, (canvas.width / 2), (canvas.height / 2));
+}
+
 function drawGame() {
     changeSnakePosition();
-    let result = isGameOver();
-    console.log(result)
-    if (result) {
+    gameOver = isGameOver();
+    console.log("gameOver", gameOver);
+    if (gameOver) {
         gameOverScreen();
     } else {
         clearScreen();
@@ -131,7 +144,13 @@ function keyDown(event) {
     }
 
     if (event.keyCode == 13) {
-        idle = false;
+        console.log("gameStarted", gameStarted)
+        if (!gameStarted) {
+            resetGame();
+            drawGame();
+            gameStarted = true;
+            gameOver = false;
+        }
     }
 }
 
@@ -144,29 +163,29 @@ function setSpeed() {
 }
 
 function isGameOver() {
-    let gameOver = false;
+    let isTouching = false;
 
     if (yVelocity === 0 && xVelocity === 0) {
         return false;
     }
     if (headX < 0 || headX >= tileCount || headY < 0 || headY >= tileCount) {
-        gameOver = true;
+        isTouching = true;
     }
     snakeParts.forEach(part => {
         if (part.x === headX && part.y === headY) {
-            gameOver = true;
+            isTouching = true;
         }
     })
-    if (gameOver) {
+    if (isTouching) {
         soundGameOver.play();
     }
-    return gameOver;
+    return isTouching;
 }
 
 let blinking = true;
 function gameOverScreen() {
-    let idle = true;
-    if (idle) {
+    gameStarted = false;
+    if (gameOver) {
         ctx.globalCompositeOperation = 'source-over';
         ctx.font = '50px Silkscreen';
         ctx.fillStyle = '#fff';
@@ -187,11 +206,27 @@ function gameOverScreen() {
             ctx.clearRect(1 * tileCount, 15 * tileCount, canvas.width - (2 * tileCount), 50);
         }
         blinking = blinking !== true;
-        console.log("blinking", blinking);
         setTimeout(() => gameOverScreen(), 500);
-    } else {
-        drawGame();
     }
 }
 
-drawGame();
+function resetGame() {
+    clearScreen();
+    speed = 7;
+    headX = 10;
+    headY = 10;
+
+    appleX = 5;
+    appleY = 5;
+
+    xVelocity = 0;
+    yVelocity = 0;
+
+    snakeParts.splice(0,snakeParts.length);
+    tailLength = 2;
+    score = 0;
+    gameOver = false;
+
+}
+
+initScreen();

@@ -33,7 +33,7 @@ body h2 {
   image-rendering: optimize-contrast;
 }
 
-#score {
+#scoreDisplay {
   font-family: "Roboto Mono", monospace;
   font-weight: 800;
   font-size: 1.25rem;

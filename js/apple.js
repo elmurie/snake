@@ -1,6 +1,6 @@
 import { tileCount, tileSize, soundScore } from "./main.js";
 
-import {ctx} from '/js/canvas.js';
+import {ctx} from './canvas.js';
 
 import main from './main.js';
 

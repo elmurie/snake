@@ -2,6 +2,8 @@ import { drawScore } from './score.js';
 
 import main from './main.js';
 
+import { tileCount } from './main.js';
+
 import { moveApple } from './apple.js';
 
 import parts from './snakePart.js';
@@ -24,7 +26,7 @@ export function clearScreen() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-export function gameOverScreen() {
+export function gameOverScreen(gameOver) {
     main.gameStarted = false;
     if (gameOver) {
         ctx.globalCompositeOperation = 'source-over';
@@ -34,7 +36,7 @@ export function gameOverScreen() {
         ctx.textBaseline = "middle";
         ctx.fillText(`Game Over!`, (canvas.width / 2), (canvas.height / 2.1));
         ctx.font = '20px Roboto Mono';
-        ctx.fillText(`Your score is: ${score}`, (canvas.width - (canvas.width / 2)), (canvas.height / 1.7));
+        ctx.fillText(`Your score is: ${main.score}`, (canvas.width - (canvas.width / 2)), (canvas.height / 1.7));
         ctx.globalCompositeOperation = 'source-over';
         ctx.fillStyle = '#fff';
         ctx.font = '20px Roboto Mono';
@@ -45,15 +47,35 @@ export function gameOverScreen() {
     }
 }
 
+export function isGameOver() {
+    let isTouching = false;
+
+    if (main.yVelocity === 0 && main.xVelocity === 0) {
+        return false;
+    }
+    if (main.headX < 0 || main.headX >= tileCount || main.headY < 0 || main.headY >= tileCount) {
+        isTouching = true;
+    }
+    parts.snakeParts.forEach(part => {
+        if (part.x === main.headX && part.y === main.headY) {
+            isTouching = true;
+        }
+    })
+    if (isTouching) {
+        main.soundGameOver.play();
+    }
+    return isTouching;
+}
+
 export function resetGame() {
     clearScreen();
-    main.speed = 7;
+
     main.headX = 10;
     main.headY = 10;
 
     moveApple();
-
     main.xVelocity = 0;
+
     main.yVelocity = 0;
     parts.snakeParts.splice(0, parts.snakeParts.length);
     parts.tailLength = 2;

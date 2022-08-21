@@ -1,4 +1,4 @@
-import { canvas, initScreen, clearScreen, gameOverScreen, isGameOver } from '/js/canvas.js';
+import { canvas, initScreen, clearScreen, gameOverScreen, isGameOver } from './canvas.js';
 
 import { drawScore } from './score.js';
 

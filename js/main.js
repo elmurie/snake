@@ -47,7 +47,6 @@ export function drawGame() {
         drawApple();
         drawSnake();
         drawScore();
-        console.log("speed", speed);
         setTimeout(() => drawGame(), 1000 / speed);
     }
 }

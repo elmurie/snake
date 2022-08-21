@@ -1,12 +1,10 @@
-import { canvas, ctx, initScreen, clearScreen, gameOverScreen, resetGame } from '/js/canvas.js';
+import { canvas, initScreen, clearScreen, gameOverScreen, isGameOver } from '/js/canvas.js';
 
 import { drawScore } from './score.js';
 
-import { drawApple, checkAppleCollision, moveApple } from './apple.js';
+import { drawApple, checkAppleCollision } from './apple.js';
 
 import {drawSnake, changeSnakePosition} from './snake.js';
-
-import parts from './snakePart.js';
 
 import { keyDown } from './keyEvents.js';
 
@@ -20,23 +18,9 @@ let headX = 10;
 let headY = 10;
 let speed = 7;
 
-export default {
-    xVelocity : 0,
-    yVelocity : 0,
-    speed : 7,
-    headX: 10,
-    headY: 10,
-    appleX: 5,
-    appleY: 5,
-    score: 0,
-    gameStarted : false,
-    gameOver : false
-}
-
 export const soundGameOver = new Audio('Game_Over.mp3');
 export const soundScore = new Audio('Point.mp3');
 
-// export let gameStarted = false;
 let gameOver = false;
 
 // we need this to load the font
@@ -54,7 +38,8 @@ export function drawGame() {
     changeSnakePosition();
     gameOver = isGameOver();
     if (gameOver) {
-        gameOverScreen();
+        gameOverScreen(gameOver);
+        speed = 7;
     } else {
         gameStarted = true;
         clearScreen();
@@ -62,6 +47,7 @@ export function drawGame() {
         drawApple();
         drawSnake();
         drawScore();
+        console.log("speed", speed);
         setTimeout(() => drawGame(), 1000 / speed);
     }
 }
@@ -72,23 +58,17 @@ export function setSpeed() {
     speed += 0.20;
 }
 
-function isGameOver() {
-    let isTouching = false;
-
-    if (yVelocity === 0 && xVelocity === 0) {
-        return false;
-    }
-    if (headX < 0 || headX >= tileCount || headY < 0 || headY >= tileCount) {
-        isTouching = true;
-    }
-    parts.snakeParts.forEach(part => {
-        if (part.x === headX && part.y === headY) {
-            isTouching = true;
-        }
-    })
-    if (isTouching) {
-        soundGameOver.play();
-    }
-    return isTouching;
+export default {
+    xVelocity : 0,
+    yVelocity : 0,
+    speed : 7,
+    headX: 10,
+    headY: 10,
+    appleX: 5,
+    appleY: 5,
+    score: 0,
+    gameStarted : false,
+    gameOver,
+    soundGameOver,
+    soundScore
 }
-

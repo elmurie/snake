@@ -28,8 +28,8 @@ export function moveApple() {
     main.appleY = Math.floor(Math.random() * tileCount);
     parts.snakeParts.forEach(part => {
         if (part.x == main.appleX && part.y == main.appleY) {
-            appleX = Math.floor(Math.random() * tileCount);
-            appleY = Math.floor(Math.random() * tileCount);
+            main.appleX = Math.floor(Math.random() * tileCount);
+            main.appleY = Math.floor(Math.random() * tileCount);
         }
     })
 }
